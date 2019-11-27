@@ -5,8 +5,8 @@
  * @param {object} DataTypes - Datatype instance
  * @returns {object} - Database Object
  */
-export default (sequelize, DataTypes) => {
-  const Favorites = sequelize.define('Favorites', {
+module.exports = (sequelize, DataTypes) => {
+  const favorite = sequelize.define('favorite', {
     userId: {
       type: DataTypes.INTEGER,
     },
@@ -14,14 +14,14 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
     },
   });
-  Favorites.associate = (models) => {
-    Favorites.belongsTo(models.Recipes, {
+  favorite.associate = (models) => {
+    favorite.belongsTo(models.recipe, {
       foreignKey: 'recipeId',
       onDelete: 'CASCADE',
     });
-    Favorites.belongsTo(models.Users, {
+    favorite.belongsTo(models.user, {
       foreignKey: 'userId',
     });
   };
-  return Favorites;
+  return favorite;
 };

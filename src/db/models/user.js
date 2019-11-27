@@ -1,8 +1,5 @@
 import { capitalize } from 'lodash';
-import bcrypt from 'bcrypt';
-
-const saltRound = 10;
-
+import { hashPassword } from '../../utils/hash';
 
 /**
  * schema for users model
@@ -10,8 +7,8 @@ const saltRound = 10;
  * @param {object} DataTypes - Datatype instance
  * @returns {object} - Database Object
  */
-export default (sequelize, DataTypes) => {
-  const Users = sequelize.define('Users', {
+module.exports = (sequelize, DataTypes) => {
+  const user = sequelize.define('user', {
     firstname: {
       type: DataTypes.STRING,
       set(value) {
@@ -24,20 +21,12 @@ export default (sequelize, DataTypes) => {
         this.setDataValue('lastname', capitalize(value));
       },
     },
-    username: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
       set(value) {
-        this.setDataValue('password', bcrypt.hashSync(value, saltRound));
+        this.setDataValue('password', hashPassword(value));
       },
-    },
-    aboutme: {
-      type: DataTypes.STRING,
     },
     email: {
       type: DataTypes.STRING,
@@ -48,29 +37,26 @@ export default (sequelize, DataTypes) => {
         this.setDataValue('email', value.toLowerCase());
       },
     },
-    photo: {
-      type: DataTypes.STRING,
-    },
+  },
+  { freezeTableName: true });
 
-  });
-
-  Users.associate = (models) => {
-    Users.hasMany(models.Recipes, {
+  user.associate = (models) => {
+    user.hasMany(models.recipe, {
       foreignKey: 'userId',
       as: 'recipe',
     });
-    Users.hasMany(models.Reviews, {
+    user.hasMany(models.review, {
       foreignKey: 'userId',
       as: 'reviews',
     });
-    Users.hasMany(models.Favorites, {
+    user.hasMany(models.favorite, {
       foreignKey: 'userId',
       as: 'favorites',
     });
-    Users.hasMany(models.Votes, {
-      foreignKey: 'userId',
-      as: 'votes',
-    });
+    // user.hasMany(models.like, {
+    //   foreignKey: 'userId',
+    //   as: 'likes',
+    // });
   };
-  return Users;
+  return user;
 };
