@@ -1,6 +1,6 @@
 import request from 'supertest';
 
-import app from '../app';
+import app from '../src/app';
 
 describe('Root api', () => {
   it('should return 404 for non existence endpoint', async () => {

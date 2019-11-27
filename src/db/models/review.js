@@ -5,8 +5,8 @@ import _ from 'lodash';
  * @param {object} DataTypes - Datatype instance
  * @returns {object} - Database Object
  */
-export default (sequelize, DataTypes) => {
-  const Reviews = sequelize.define('Reviews', {
+module.exports = (sequelize, DataTypes) => {
+  const review = sequelize.define('review', {
     content: {
       type: DataTypes.TEXT,
       allowNull: false,
@@ -25,14 +25,14 @@ export default (sequelize, DataTypes) => {
     },
 
   });
-  Reviews.associate = (models) => {
-    Reviews.belongsTo(models.Recipes, {
+  review.associate = (models) => {
+    review.belongsTo(models.recipe, {
       foreignKey: 'recipeId',
       onDelete: 'CASCADE',
     });
-    Reviews.belongsTo(models.Users, {
+    review.belongsTo(models.user, {
       foreignKey: 'userId',
     });
   };
-  return Reviews;
+  return review;
 };
